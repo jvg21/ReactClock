@@ -1,43 +1,44 @@
 import { useEffect, useState } from "react"
 
 const useCountdownTimer = (deadLine: string) => {
-    const [RemainingTime, setRemainingTime] = useState(StartTime());
+    const zeroTime = {
+        days:0,hours:0,minutes:0,seconds:0
+    }
+    const [remainingTime, setremainingTime] = useState(startTime());
 
-    const [Days, setDays] = useState(0);
-    const [Hours, setHours] = useState(0);
-    const [Minutes, setMinutes] = useState(0);
-    const [Seconds, setSeconds] = useState(0);
-
-    function StartTime() {
+    function startTime() {
         const time = Date.parse(deadLine) - Date.now();
-        const Days = Math.floor(time / (1000 * 60 * 60 * 24));
-        const Hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-        const Minutes = Math.floor((time / 1000 / 60) % 60);
-        const Seconds = Math.floor((time % (1000 * 60)) / 1000);
+        if(time <= 0)return zeroTime
+        const days = Math.floor(time / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((time / 1000 / 60) % 60);
+        const seconds = Math.floor((time % (1000 * 60)) / 1000);
 
-        return {Days,Hours,Minutes,Seconds};
+        return {days,hours,minutes,seconds};
     }
 
     function formatDigit(digit: number) {
         return digit >= 10 ? digit.toString() : '0'.concat(digit.toString());
     }
 
-    function FormatedTime() {
+    function formatedTime() {
         return {
-            days: formatDigit(RemainingTime.Days),
-            hours: formatDigit(RemainingTime.Hours),
-            minutes: formatDigit(RemainingTime.Minutes),
-            seconds: formatDigit(RemainingTime.Seconds)
+            days: formatDigit(remainingTime.days),
+            hours: formatDigit(remainingTime.hours),
+            minutes: formatDigit(remainingTime.minutes),
+            seconds: formatDigit(remainingTime.seconds)
         }
     }
 
     useEffect(() => {
-        setInterval(() => {
-            setRemainingTime(StartTime());
+        const interval = setInterval(() => {
+            setremainingTime(startTime());
         }, 1000)
+
+        return () => clearInterval(interval);
     }, [deadLine])
 
-    return (FormatedTime())
+    return (formatedTime())
 }
 
 export default useCountdownTimer;
