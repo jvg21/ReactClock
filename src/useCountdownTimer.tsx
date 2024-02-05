@@ -18,17 +18,15 @@ const zeroTime = {
     years: 0, days: 0, hours: 0, minutes: 0, seconds: 0
 }
 
-const formatDigit = (digit: number) =>  digit >= 10 ? digit.toString() : '0'.concat(digit.toString());
+const formatDigit = (digit: number) =>  digit >= 10 ? digit.toString() : digit.toString().padStart(2,'0');
 
-const useCountdownTimer = (deadLine: string) => {
-    
-    const targetDate = Date.parse(deadLine);
-
+const useCountdownTimer = (deadline: string) => {
+    const targetDate = Date.parse(deadline);
     const [remainingTime, setRemainingTime] = useState(calculateTime());
 
     function calculateTime() {
         try {
-            if (!targetDate) throw new Error('Invalid Input Date')
+            if (!targetDate ||  isNaN(targetDate)) throw new Error('Invalid Input Date')
 
             const time = targetDate - Date.now();
             if (time <= 0) return zeroTime
@@ -66,7 +64,7 @@ const useCountdownTimer = (deadLine: string) => {
         }, 1000)
 
         return () => clearInterval(interval);
-    }, [deadLine])
+    }, [targetDate])
 
     return (formatTime())
 }
