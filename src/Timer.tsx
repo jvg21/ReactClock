@@ -2,19 +2,22 @@ import { useEffect, useState } from "react"
 
 const useCountdownTimer = (deadLine: string) => {
     const zeroTime = {
-        days:0,hours:0,minutes:0,seconds:0
+        years:0,days:0,hours:0,minutes:0,seconds:0
     }
-    const [remainingTime, setremainingTime] = useState(startTime());
+
+    const [remainingTime, setRemainingTime] = useState(startTime());
 
     function startTime() {
         const time = Date.parse(deadLine) - Date.now();
-        if(time <= 0)return zeroTime
-        const days = Math.floor(time / (1000 * 60 * 60 * 24));
+        if(time <= 0) return zeroTime
+        
+        const years = Math.floor(time / (1000 * 60 * 60 * 24 * 365));
+        const days = Math.floor((time / (1000 * 60 * 60 * 24)) % 365);
         const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((time / 1000 / 60) % 60);
         const seconds = Math.floor((time % (1000 * 60)) / 1000);
 
-        return {days,hours,minutes,seconds};
+        return {years,days,hours,minutes,seconds};
     }
 
     function formatDigit(digit: number) {
@@ -23,6 +26,7 @@ const useCountdownTimer = (deadLine: string) => {
 
     function formatedTime() {
         return {
+            years:formatDigit(remainingTime.years),
             days: formatDigit(remainingTime.days),
             hours: formatDigit(remainingTime.hours),
             minutes: formatDigit(remainingTime.minutes),
@@ -32,7 +36,7 @@ const useCountdownTimer = (deadLine: string) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setremainingTime(startTime());
+            setRemainingTime(startTime());
         }, 1000)
 
         return () => clearInterval(interval);
