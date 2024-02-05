@@ -1,32 +1,56 @@
 import { useEffect, useState } from "react"
 
+/*
+
+----------------suggested date formats-------------------------
+ISO 8601 format:
+
+Data: "2024-02-05"
+Date and Time: "2024-02-05T12:30:00Z"
+
+Standard JavaScript format: (recommended)
+
+"February 5, 2024 12:30:00"
+"Tuesday, February 5, 2024, 12:30:00 GMT+0000 (UTC)"
+*/
+
+const zeroTime = {
+    years: 0, days: 0, hours: 0, minutes: 0, seconds: 0
+}
+
+const formatDigit = (digit: number) =>  digit >= 10 ? digit.toString() : '0'.concat(digit.toString());
+
 const useCountdownTimer = (deadLine: string) => {
-    const zeroTime = {
-        years:0,days:0,hours:0,minutes:0,seconds:0
+    
+    const targetDate = Date.parse(deadLine);
+
+    const [remainingTime, setRemainingTime] = useState(calculateTime());
+
+    function calculateTime() {
+        try {
+            if (!targetDate) throw new Error('Invalid Input Date')
+
+            const time = targetDate - Date.now();
+            if (time <= 0) return zeroTime
+
+            const years = Math.floor(time / (1000 * 60 * 60 * 24 * 365));
+            const days = Math.floor((time / (1000 * 60 * 60 * 24)) % 365);
+            const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((time / 1000 / 60) % 60);
+            const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+            return { years, days, hours, minutes, seconds };
+        }
+        catch (e) {
+            console.log(e);
+            return zeroTime;
+        }
+
     }
 
-    const [remainingTime, setRemainingTime] = useState(startTime());
-
-    function startTime() {
-        const time = Date.parse(deadLine) - Date.now();
-        if(time <= 0) return zeroTime
-        
-        const years = Math.floor(time / (1000 * 60 * 60 * 24 * 365));
-        const days = Math.floor((time / (1000 * 60 * 60 * 24)) % 365);
-        const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((time / 1000 / 60) % 60);
-        const seconds = Math.floor((time % (1000 * 60)) / 1000);
-
-        return {years,days,hours,minutes,seconds};
-    }
-
-    function formatDigit(digit: number) {
-        return digit >= 10 ? digit.toString() : '0'.concat(digit.toString());
-    }
-
-    function formatedTime() {
+    function formatTime() {
         return {
-            years:formatDigit(remainingTime.years),
+            years: formatDigit(remainingTime.years),
             days: formatDigit(remainingTime.days),
             hours: formatDigit(remainingTime.hours),
             minutes: formatDigit(remainingTime.minutes),
@@ -35,14 +59,16 @@ const useCountdownTimer = (deadLine: string) => {
     }
 
     useEffect(() => {
+        if (!targetDate) return
+
         const interval = setInterval(() => {
-            setRemainingTime(startTime());
+            setRemainingTime(calculateTime());
         }, 1000)
 
         return () => clearInterval(interval);
     }, [deadLine])
 
-    return (formatedTime())
+    return (formatTime())
 }
 
 export default useCountdownTimer;
