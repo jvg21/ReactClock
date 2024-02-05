@@ -1,7 +1,7 @@
 <H2>Countdown Timer React Hook</H2>
 This custom React Hook, useCountdownTimer, provides a simple and reusable solution for implementing countdown timers in React applications. The hook takes a deadline as input and calculates the remaining time in days, hours, minutes, and seconds. It uses the setInterval function to update the timer every second, ensuring real-time accuracy.
 
-<br/>
+/n
 Features:
 <br/>
 Flexible Deadline: Accepts a deadline as a string and dynamically calculates the remaining time.
