@@ -24,4 +24,5 @@ Date Formats:
   <li>
     Standard JavaScript format: "February 5, 2024 12:30:00"
   </li>
-  
+
+  <a href='https://github.com/jvg21/ReactClock/blob/main/src/useCountdownTimer.tsx'> Hook Algorithm</a>
