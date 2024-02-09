@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 
-/*
-
-----------------suggested date formats-------------------------
+/*----------------suggested date formats-------------------------
 ISO 8601 format:
 
 Data: "2024-02-05"
@@ -11,12 +9,9 @@ Date and Time: "2024-02-05T12:30:00Z"
 Standard JavaScript format: (recommended)
 
 "February 5, 2024 12:30:00"
-"Tuesday, February 5, 2024, 12:30:00 GMT+0000 (UTC)"
-*/
+"Tuesday, February 5, 2024, 12:30:00 GMT+0000 (UTC)"*/
 
-const zeroTime = {
-    years: 0, days: 0, hours: 0, minutes: 0, seconds: 0
-}
+const zeroTime = { years: 0, days: 0, hours: 0, minutes: 0, seconds: 0 }
 
 const formatDigit = (digit: number) =>  digit >= 10 ? digit.toString() : digit.toString().padStart(2,'0');
 
@@ -26,7 +21,7 @@ const useCountdownTimer = (deadline: string) => {
 
     function calculateTime() {
         try {
-            if (!targetDate ||  isNaN(targetDate)) throw new Error('Invalid Input Date')
+            if (!targetDate || isNaN(targetDate)) throw new Error('Invalid Input Date' + deadline)
 
             const time = targetDate - Date.now();
             if (time <= 0) return zeroTime
@@ -43,7 +38,6 @@ const useCountdownTimer = (deadline: string) => {
             console.log(e);
             return zeroTime;
         }
-
     }
 
     function formatTime() {
